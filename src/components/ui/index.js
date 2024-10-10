@@ -8,7 +8,7 @@ export const CardFooter = ({ children }) => <div className="mt-4 flex justify-en
 export const CardHeader = ({ children }) => <div className="mb-2">{children}</div>;
 export const CardTitle = ({ children }) => <h3 className="text-lg font-semibold">{children}</h3>;
 export const Tabs = ({ children }) => <div className="mb-4">{children}</div>;
-export const TabsContent = ({ children, value }) => <div role="tabpanel" hidden={value !== value}>{children}</div>;
+export const TabsContent = ({ children, value, currentValue }) => <div role="tabpanel" hidden={value !== currentValue}>{children}</div>;
 export const TabsList = ({ children }) => <div className="flex border-b">{children}</div>;
 export const TabsTrigger = ({ children, value, ...props }) => (
   <button className="px-4 py-2 border-b-2 border-transparent hover:border-gray-300" {...props}>{children}</button>
