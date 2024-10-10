@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react'
-import { Lock, Unlock, ArrowLeft } from 'lucide-react'
+import { ChevronRight, Lock, Unlock, ArrowLeft, User } from 'lucide-react'
 import { Button, Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle, Tabs, TabsContent, TabsList, TabsTrigger, ScrollArea, Alert, AlertDescription, AlertTitle } from "./components/ui";
 
 const courses = [
@@ -75,11 +75,9 @@ export default function TradingCoursesApp() {
         }
         setIsLoading(false);
       } else if (process.env.NODE_ENV === 'development') {
-        // For local development, use a mock user
         setUser({ id: 123, first_name: 'Test', last_name: 'User', username: 'testuser' });
         setIsLoading(false);
       } else {
-        // If Telegram WebApp is not available and not in development, retry after a short delay
         setTimeout(initializeTelegram, 100);
       }
     };
@@ -111,26 +109,23 @@ export default function TradingCoursesApp() {
 
   if (isLoading) {
     return (
-      <div className="max-w-md mx-auto p-4 bg-background text-foreground">
-        <h1 className="text-2xl font-bold text-center mb-6">Trading Courses</h1>
-        <Card>
-          <CardHeader>
-            <CardTitle>Loading...</CardTitle>
-            <CardDescription>Initializing Telegram WebApp</CardDescription>
-          </CardHeader>
-        </Card>
+      <div className="flex items-center justify-center h-screen bg-gray-100">
+        <div className="text-center">
+          <div className="w-16 h-16 border-t-4 border-blue-500 border-solid rounded-full animate-spin mx-auto mb-4"></div>
+          <h2 className="text-xl font-semibold text-gray-700">Loading...</h2>
+          <p className="text-gray-500">Initializing Telegram WebApp</p>
+        </div>
       </div>
     )
   }
 
   if (!user) {
     return (
-      <div className="max-w-md mx-auto p-4 bg-background text-foreground">
-        <h1 className="text-2xl font-bold text-center mb-6">Trading Courses</h1>
-        <Card>
+      <div className="flex items-center justify-center h-screen bg-gray-100">
+        <Card className="w-full max-w-md">
           <CardHeader>
-            <CardTitle>Authentication Error</CardTitle>
-            <CardDescription>Unable to authenticate with Telegram</CardDescription>
+            <CardTitle className="text-2xl text-center text-red-600">Authentication Error</CardTitle>
+            <CardDescription className="text-center">Unable to authenticate with Telegram</CardDescription>
           </CardHeader>
           {error && (
             <Alert variant="destructive" className="mt-4">
@@ -144,21 +139,21 @@ export default function TradingCoursesApp() {
   }
 
   return (
-    <div className="max-w-md mx-auto p-4 bg-background text-foreground">
-      <h1 className="text-2xl font-bold text-center mb-6">Trading Courses</h1>
+    <div className="max-w-md mx-auto p-4 bg-gray-100 min-h-screen">
+      <h1 className="text-3xl font-bold text-center mb-6 text-blue-600">Trading Courses</h1>
       
       <Tabs defaultValue="courses" className="w-full">
-        <TabsList className="grid w-full grid-cols-2">
-          <TabsTrigger value="courses">Courses</TabsTrigger>
-          <TabsTrigger value="account">Account</TabsTrigger>
+        <TabsList className="grid w-full grid-cols-2 mb-6">
+          <TabsTrigger value="courses" className="text-lg py-2">Courses</TabsTrigger>
+          <TabsTrigger value="account" className="text-lg py-2">Account</TabsTrigger>
         </TabsList>
         <TabsContent value="courses">
-          <ScrollArea className="h-[400px] w-full rounded-md border p-4">
+          <ScrollArea className="h-[calc(100vh-200px)] w-full rounded-md">
             {!selectedCourse ? (
               courses.map((course) => (
-                <Card key={course.id} className="mb-4">
+                <Card key={course.id} className="mb-4 hover:shadow-lg transition-shadow duration-200">
                   <CardHeader>
-                    <CardTitle>{course.title}</CardTitle>
+                    <CardTitle className="text-xl text-blue-600">{course.title}</CardTitle>
                     <CardDescription>{course.description}</CardDescription>
                   </CardHeader>
                   <CardContent>
@@ -167,16 +162,18 @@ export default function TradingCoursesApp() {
                         <li key={lesson.id} className="flex items-center justify-between">
                           <span>{lesson.title}</span>
                           {lesson.locked ? (
-                            <Lock className="h-4 w-4 text-muted-foreground" />
+                            <Lock className="h-4 w-4 text-gray-400" />
                           ) : (
-                            <Unlock className="h-4 w-4 text-primary" />
+                            <Unlock className="h-4 w-4 text-green-500" />
                           )}
                         </li>
                       ))}
                     </ul>
                   </CardContent>
                   <CardFooter>
-                    <Button className="w-full" onClick={() => handleCourseSelect(course)}>View Course</Button>
+                    <Button className="w-full bg-blue-500 hover:bg-blue-600 text-white" onClick={() => handleCourseSelect(course)}>
+                      View Course <ChevronRight className="ml-2 h-4 w-4" />
+                    </Button>
                   </CardFooter>
                 </Card>
               ))
@@ -185,15 +182,18 @@ export default function TradingCoursesApp() {
                 <Button variant="outline" className="mb-4" onClick={handleBackToCourses}>
                   <ArrowLeft className="mr-2 h-4 w-4" /> Back to Courses
                 </Button>
-                <h2 className="text-2xl font-bold mb-4">{selectedCourse.title}</h2>
+                <h2 className="text-2xl font-bold mb-4 text-blue-600">{selectedCourse.title}</h2>
                 {!selectedLesson ? (
                   selectedCourse.lessons.map((lesson) => (
-                    <Card key={lesson.id} className="mb-4">
+                    <Card key={lesson.id} className="mb-4 hover:shadow-lg transition-shadow duration-200">
                       <CardHeader>
-                        <CardTitle>{lesson.title}</CardTitle>
+                        <CardTitle className="text-lg">{lesson.title}</CardTitle>
                       </CardHeader>
                       <CardFooter>
-                        <Button className="w-full" onClick={() => handleLessonSelect(lesson)}>
+                        <Button 
+                          className={`w-full ${lesson.locked ? 'bg-gray-300 text-gray-600' : 'bg-blue-500 hover:bg-blue-600 text-white'}`} 
+                          onClick={() => handleLessonSelect(lesson)}
+                        >
                           {lesson.locked ? "Unlock Lesson" : "View Lesson"}
                         </Button>
                       </CardFooter>
@@ -205,10 +205,10 @@ export default function TradingCoursesApp() {
                       <Button variant="outline" className="mb-2" onClick={handleBackToLessons}>
                         <ArrowLeft className="mr-2 h-4 w-4" /> Back to Lessons
                       </Button>
-                      <CardTitle>{selectedLesson.title}</CardTitle>
+                      <CardTitle className="text-xl text-blue-600">{selectedLesson.title}</CardTitle>
                     </CardHeader>
                     <CardContent>
-                      <p>{selectedLesson.content}</p>
+                      <p className="text-gray-700 leading-relaxed">{selectedLesson.content}</p>
                     </CardContent>
                   </Card>
                 )}
@@ -219,18 +219,20 @@ export default function TradingCoursesApp() {
         <TabsContent value="account">
           <Card>
             <CardHeader>
-              <CardTitle>Account</CardTitle>
+              <CardTitle className="text-2xl text-blue-600">Account</CardTitle>
               <CardDescription>Your Telegram account information</CardDescription>
             </CardHeader>
-            <CardContent className="space-y-2">
-              <div>
-                <strong>Name:</strong> {user.first_name} {user.last_name}
+            <CardContent className="space-y-4">
+              <div className="flex items-center space-x-4">
+                <User className="h-12 w-12 text-blue-500" />
+                <div>
+                  <p className="font-semibold">{user.first_name} {user.last_name}</p>
+                  <p className="text-sm text-gray-500">@{user.username || 'Not set'}</p>
+                </div>
               </div>
               <div>
-                <strong>Username:</strong> {user.username || 'Not set'}
-              </div>
-              <div>
-                <strong>Telegram ID:</strong> {user.id}
+                <strong className="text-gray-700">Telegram ID:</strong> 
+                <span className="ml-2 text-gray-600">{user.id}</span>
               </div>
             </CardContent>
           </Card>
