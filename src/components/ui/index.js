@@ -1,0 +1,15 @@
+export const Button = ({ children, ...props }) => <button {...props}>{children}</button>;
+export const Card = ({ children }) => <div>{children}</div>;
+export const CardContent = ({ children }) => <div>{children}</div>;
+export const CardDescription = ({ children }) => <p>{children}</p>;
+export const CardFooter = ({ children }) => <div>{children}</div>;
+export const CardHeader = ({ children }) => <div>{children}</div>;
+export const CardTitle = ({ children }) => <h3>{children}</h3>;
+export const Tabs = ({ children }) => <div>{children}</div>;
+export const TabsContent = ({ children }) => <div>{children}</div>;
+export const TabsList = ({ children }) => <div>{children}</div>;
+export const TabsTrigger = ({ children }) => <button>{children}</button>;
+export const ScrollArea = ({ children }) => <div>{children}</div>;
+export const Alert = ({ children }) => <div>{children}</div>;
+export const AlertDescription = ({ children }) => <p>{children}</p>;
+export const AlertTitle = ({ children }) => <h4>{children}</h4>;
